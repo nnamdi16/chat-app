@@ -1,0 +1,51 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import * as Search from '../utils/Search';
+
+class SearchBooks extends Component {
+	componentDidMount() {
+		if (this.props.urlQuery && this.props.urlQuery !== this.props.query) {
+			this.props.updateQuery(this.props.urlQuery);
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		console.log('SearchBooks component did update, will do search if the conditions meet');
+		if (this.props.query && prevProps.query !== this.props.query) {
+			console.log('calling Search');
+			Search.Search(this.props.query.trim()).then(shelvesObject => this.props.updateShelf(shelvesObject));
+		} else {
+			console.log('Search not carried out...');
+		}
+	}
+
+	render() {
+		return (
+			<div className="search-books">
+				<div className="search-books-bar">
+					<Link to="/" className="close-search">
+						Close
+					</Link>
+					<div className="search-books-input-wrapper">
+						<input
+							type="text"
+							placeholder="Search by title or author"
+							value={this.props.query}
+							onChange={event => this.props.updateQuery(event.target.value)}
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+SearchBooks.propTypes = {
+	query: PropTypes.string.isRequired,
+	urlQuery: PropTypes.string,
+	updateQuery: PropTypes.func.isRequired,
+	updateShelf: PropTypes.func.isRequired
+};
+
+export default SearchBooks;
