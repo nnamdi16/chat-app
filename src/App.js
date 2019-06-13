@@ -31,7 +31,7 @@ class BookApp extends Component {
 
 	updateQuery = query => {
 		console.log(query);
-		debounce(this.setState({ query: query }), 200);
+		this.setState({ query: query });
 	};
 	render() {
 		return (
