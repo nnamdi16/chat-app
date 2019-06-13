@@ -7,15 +7,19 @@ class DisplayBooks extends Component {
 		id: this.props.id,
 		title: '',
 		authors: [''],
-		imageUrl: { smallThumbnail: '' },
+		imageLinks: { smallThumbnail: '' },
 		shelf: 'none'
 	};
 
 	componentDidMount() {
-		BooksAPI.get(this.props.id).then(res => this.setState(res));
+		BooksAPI.get(this.props.id).then(res => {
+			this.setState(res);
+		});
 	}
 
-	handleChange(event) {
+	handleChange = event => {
+		console.log('event', event);
+		// event.preventDefault();
 		let createShelf = event.target.value;
 		console.log(createShelf);
 		let previousShelf = this.state.shelf;
@@ -23,8 +27,9 @@ class DisplayBooks extends Component {
 		BooksAPI.update({ id: this.state.id }, createShelf)
 			.then(shelfObj => this.props.updateShelf(shelfObj))
 			.catch(() => this.setState({ shelf: previousShelf }));
-	}
+	};
 	render() {
+		console.log('state', this.state);
 		return (
 			<div className="book">
 				<div className="book-top">
@@ -34,13 +39,13 @@ class DisplayBooks extends Component {
 						style={{
 							width: 128,
 							height: 192,
-							backgroundImage: `url(${this.state.imageUrl.smallThumbnail})`
+							backgroundImage: `url(${this.state.imageLinks.smallThumbnail})`
 						}}
 					/>
 
 					<div className="book-shelf-changer">
 						<form>
-							<select value={this.state.shelf} onChange={this.handleChange}>
+							<select value={this.state.shelf} onChange={e => this.handleChange(e)}>
 								<option disabled value="none">
 									Move to...
 								</option>
